@@ -3,7 +3,10 @@ import psycopg2
 from dbconnection import get_connection
 
 app = Flask(__name__)
-
+@app.route("/")
+def homepage():
+    return render_template("/index.html")
+    
 ##########################
 ### CADASTRO DE LIVROS ###
 ##########################
@@ -12,13 +15,12 @@ app = Flask(__name__)
 def pagina_cadastrar_livro():
     return render_template("cadastrar_livro.html")
 
-@app.route("/livros", methods=["post"])
+@app.route("/livro", methods=["post"])
 def cadastrar_livro():
     titulo = request.form["titulo"]
     autor = request.form["autor"]
     genero = request.form["genero"]
     ano_publicacao = request.form["ano_publicacao"]
-        
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into livros(titulo, autor, genero, ano_publicacao) values(%s, %s, %s, %s)", (titulo, autor, genero, ano_publicacao))
@@ -42,7 +44,6 @@ def registrar_leitura():
     comentario = request.form["comentario"]
     data_conclusao = request.form["data_conclusao"]
     livro_id = request.form["livro_id"]
-        
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into leituras(nota, comentario, data_conclusao, livro_id) values(%s, %s, %s, %s)", (nota, comentario, data_conclusao, livro_id))
@@ -72,6 +73,34 @@ def listar_livros():
             "genero": livro[3]
         })
     return jsonify(resultado)
+
+#############################
+### LISTA DE LIVROS LIDOS ###
+#############################
+
+@app.route("/lidos", methods=["get"])
+def listar_livros_lidos():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("select a.titulo from livros as a inner join leituras as b on a.id = b.livro_id")
+    livros_lidos = cur.fetchall()
+    cur.close()
+    conn.close()
+    return livros_lidos
+
+#################################
+### LISTA DE LIVROS NAO LIDOS ###
+#################################
+
+@app.route("/nao_lidos", methods=["get"])
+def listar_livros_nao_lidos():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("select a.titulo from livros as a left join leituras as b on a.id = b.livro_id where b.livro_id is null")
+    livros_nao_lidos = cur.fetchall()
+    cur.close()
+    conn.close()
+    return livros_nao_lidos 
 
 if __name__=="__main__":
     app.run()

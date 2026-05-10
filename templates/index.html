@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <div  class="navbar">
+            <h1>Clube do Livro</h1>
+            <a href="/templates/cadastrar_livro.html">cadastrar livro</a>
+            <a href="/templates/registrar_leitura.html">registrar leitura</a>
+        </div>
+    </nav>
+    <div id="lista-livros"></div>
+    <script>
+        fetch("/lista")
+        .then(resultado => resultado.json())
+        .then(livros => {
+            console.log(livros)
+    })
+    </script>
+</body>
+</html>
