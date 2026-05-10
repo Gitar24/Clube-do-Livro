@@ -1,9 +1,14 @@
 import psycopg2
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 def get_connection():
     conn = psycopg2.connect(
-        host="localhost",
-        user="konton",
-        database="postgres",
-        password="314"
+        host=os.environ["host"],
+        user=os.environ["user"],
+        database=os.environ["database"],
+        password=os.environ["password"]
     )
     return conn

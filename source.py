@@ -4,15 +4,38 @@ from dbconnection import get_connection
 
 app = Flask(__name__)
 
-@app.route("/interface_cadastrar_livros")
-def homepage():
-    return render_template("cad_livros.html")
+##########################
+### CADASTRO DE LIVROS ###
+##########################
 
-@app.route("/interface_registrar_leituras")
-def homepage2():
-    return render_template("index.html")
+@app.route("/cadastrar_livro")
+def pagina_cadastrar_livro():
+    return render_template("cadastrar_livro.html")
 
-@app.route("/registrar_leitura", methods=["post"])
+@app.route("/livros", methods=["post"])
+def cadastrar_livro():
+    titulo = request.form["titulo"]
+    autor = request.form["autor"]
+    genero = request.form["genero"]
+    ano_publicacao = request.form["ano_publicacao"]
+        
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("insert into livros(titulo, autor, genero, ano_publicacao) values(%s, %s, %s, %s)", (titulo, autor, genero, ano_publicacao))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return render_template("cadastrar_livro.html")
+
+############################
+### REGISTRO DE LEITURAS ###
+############################
+
+@app.route("/registrar_leitura")
+def pagina_registrar_leitura():
+    return render_template("registrar_leitura.html")
+
+@app.route("/leituras", methods=["post"])
 def registrar_leitura():
     print(request.form)
     nota = request.form["nota"]
@@ -26,24 +49,13 @@ def registrar_leitura():
     conn.commit()
     cur.close()
     conn.close()
-    return render_template("index.html")
+    return render_template("registrar_leitura.html")
 
-@app.route("/cadastrar_livros", methods=["post"])
-def cadastrar_livros():
-    titulo = request.form["titulo"]
-    autor = request.form["autor"]
-    genero = request.form["genero"]
-    ano_publicacao = request.form["ano_publicacao"]
-        
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("insert into livros(titulo, autor, genero, ano_publicacao) values(%s, %s, %s, %s)", (titulo, autor, genero, ano_publicacao))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return render_template("cad_livros.html")
+#######################
+### LISTA DE LIVROS ###
+#######################
 
-@app.route("/listar_livros", methods=["get"])
+@app.route("/lista", methods=["get"])
 def listar_livros():
     conn = get_connection()
     cur = conn.cursor()
