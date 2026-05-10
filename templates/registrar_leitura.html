@@ -4,23 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-</head>
+    <link rel="stylesheet" href="/static/style.css">
 <body>
-    <form action="/registrar_leitura" method="post">
+    <nav>
+        <div  class="navbar">
+            <a href="/"><h1>Clube do Livro</h1></a>
+            <button><a href="cadastrar_livro">cadastrar livro</a></button>
+        </div>
+    </nav>
+    <div class="formulario">
+        <form action="/registrar_leitura" method="post">
 
-        <label>livro_id</label><br>
-        <input type="text" name="livro_id"><br>
+            <label>livro_id</label><br>
+            <input type="text" name="livro_id"><br>
 
-        <label>nota</label><br>
-        <input type="number" name="nota"><br>
+            <label>nota</label><br>
+            <input type="number" name="nota"><br>
 
-        <label>comentario</label><br>
-        <input type="text" name="comentario"><br>
+            <label>comentario</label><br>
+            <input type="text" name="comentario"><br>
 
-        <label>data conclusao</label><br>
-        <input type="date" name="data_conclusao"><br><br>
+            <label>data conclusao</label><br>
+            <input type="date" name="data_conclusao"><br><br>
 
-        <button type="submit">Enviar</button>
-    </form>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    
 </body>
 </html>

@@ -10,17 +10,85 @@
     <nav>
         <div  class="navbar">
             <h1>Clube do Livro</h1>
-            <a href="/templates/cadastrar_livro.html">cadastrar livro</a>
-            <a href="/templates/registrar_leitura.html">registrar leitura</a>
+            <button><a href="cadastrar_livro">cadastrar livro</a></button>
+            <button><a href="registrar_leitura">registrar leitura</a></button>
         </div>
     </nav>
+    <div id="filtro">
+        <p>filtrar:</p>
+        <button id="todos">todos</button>
+        <button id="lidos">lidos</button>
+        <button id="nao-lidos">nao lidos</button>
+    </div>
     <div id="lista-livros"></div>
+
+<!--
+###################
+### BOTAO TODOS ###
+###################
+-->
+
+
     <script>
+        function listarlivros(livros) {
+            const div = document.getElementById("lista-livros")
+            html = ""
+            for (const livro of livros){
+                html += `
+                    <div class="card">
+                        <p>${livro.titulo}</p>
+                        <p>${livro.autor}</p>
+                    </div>`
+            }
+            div.innerHTML = html
+        }
+        
+        ///////////////////////////////////////////
+        /// MOSTRAR A LISTA DE TODOS POR PADRAO ///
+        ///////////////////////////////////////////
+
         fetch("/lista")
-        .then(resultado => resultado.json())
-        .then(livros => {
-            console.log(livros)
-    })
+            .then(resultado => resultado.json())
+            .then(livros => {
+                listarlivros(livros)
+            })
+
+        ///////////////////
+        /// BOTAO TODOS ///
+        ///////////////////
+
+        document.getElementById("todos").onclick = function(){
+            fetch("/lista")
+            .then(resultado => resultado.json())
+            .then(livros => {
+                listarlivros(livros)
+            })
+        }
+        
+        ///////////////////
+        /// BOTAO LIDOS ///
+        ///////////////////
+
+        document.getElementById("lidos").onclick = function(){
+            fetch("/lidos")
+            .then(resultado => resultado.json())
+            .then(livros => {
+                listarlivros(livros)
+            })
+        }
+
+        ///////////////////////
+        /// BOTAO NAO LIDOS ///
+        ///////////////////////
+
+        document.getElementById("nao-lidos").onclick = function(){
+            fetch("/nao_lidos")
+            .then(resultado => resultado.json())
+            .then(livros => {
+                listarlivros(livros)
+            })
+        }
     </script>
+
 </body>
 </html>

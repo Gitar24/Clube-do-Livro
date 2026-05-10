@@ -1,11 +1,40 @@
+body {
+    background-color: rgb(43, 43, 43);
+}
+*{
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+button {
+    background-color: rgb(77, 77, 77);
+    border-color: rgb(134, 134, 134);
+    border-radius: 10%;
+}
 .navbar {
-    
-    background-color: rgb(190, 190, 190);
+    background-color: rgb(77, 77, 77);
     display: flex;
     justify-content: space-around;
     align-items: center;
     height: 50px;
 }
+#filtro {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 8px;
+}
 #lista-livros {
-    background-color: rgb(167, 196, 186);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+.card {
+    border-color: gainsboro;
+    border-radius: 10px;
+    min-width: 240px;
+    min-height: 240px;
+    background-color: rgb(77, 77, 77);
+}
+.card p {
+    margin: 5%;
 }

@@ -82,11 +82,19 @@ def listar_livros():
 def listar_livros_lidos():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select a.titulo from livros as a inner join leituras as b on a.id = b.livro_id")
+    cur.execute("select * from livros as a inner join leituras as b on a.id = b.livro_id")
     livros_lidos = cur.fetchall()
     cur.close()
     conn.close()
-    return livros_lidos
+    resultado_lidos = []
+    for livro in livros_lidos:
+        resultado_lidos.append({
+            "id": livro[0],
+            "titulo": livro[1],
+            "autor": livro[2],
+            "genero": livro[3]
+        })
+    return jsonify(resultado_lidos)
 
 #################################
 ### LISTA DE LIVROS NAO LIDOS ###
@@ -96,11 +104,19 @@ def listar_livros_lidos():
 def listar_livros_nao_lidos():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select a.titulo from livros as a left join leituras as b on a.id = b.livro_id where b.livro_id is null")
+    cur.execute("select * from livros as a left join leituras as b on a.id = b.livro_id where b.livro_id is null")
     livros_nao_lidos = cur.fetchall()
     cur.close()
     conn.close()
-    return livros_nao_lidos 
+    resultado_nao_lidos = []
+    for livro in livros_nao_lidos:
+        resultado_nao_lidos.append({
+            "id": livro[0],
+            "titulo": livro[1],
+            "autor": livro[2],
+            "genero": livro[3]
+        })
+    return jsonify(resultado_nao_lidos)
 
 if __name__=="__main__":
     app.run()
