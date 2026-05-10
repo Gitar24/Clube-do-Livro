@@ -8,6 +8,26 @@ app = Flask(__name__)
 def homepage():
     return render_template("cad_livros.html")
 
+@app.route("/interface_registrar_leituras")
+def homepage2():
+    return render_template("index.html")
+
+@app.route("/registrar_leitura", methods=["post"])
+def registrar_leitura():
+    print(request.form)
+    nota = request.form["nota"]
+    comentario = request.form["comentario"]
+    data_conclusao = request.form["data_conclusao"]
+    livro_id = request.form["livro_id"]
+        
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("insert into leituras(nota, comentario, data_conclusao, livro_id) values(%s, %s, %s, %s)", (nota, comentario, data_conclusao, livro_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return render_template("index.html")
+
 @app.route("/cadastrar_livros", methods=["post"])
 def cadastrar_livros():
     titulo = request.form["titulo"]
