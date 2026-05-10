@@ -10,7 +10,12 @@
     <nav>
         <div  class="navbar">
             <h1>Clube do Livro</h1>
-            <button><a href="cadastrar_livro">cadastrar livro</a></button>
+            <form action="/filtrar_autor">
+                <input type="text" name="buscar" id="input_buscar">
+                <button type="submit" id="buscar">buscar</button>
+            </form>
+            
+            <button><a href="cadastrar_livro">+cadastrar livro</a></button>
             <button><a href="registrar_leitura">registrar leitura</a></button>
         </div>
     </nav>
@@ -42,7 +47,7 @@
             }
             div.innerHTML = html
         }
-        
+
         ///////////////////////////////////////////
         /// MOSTRAR A LISTA DE TODOS POR PADRAO ///
         ///////////////////////////////////////////
@@ -83,6 +88,20 @@
 
         document.getElementById("nao-lidos").onclick = function(){
             fetch("/nao_lidos")
+            .then(resultado => resultado.json())
+            .then(livros => {
+                listarlivros(livros)
+            })
+        }
+        
+        /////////////////////////////////
+        /// BUSCAR O LIVRO PELO AUTOR ///
+        /////////////////////////////////
+
+        document.getElementById("buscar").onclick = function(event){
+            event.preventDefault()
+            const valor = document.getElementById("input_buscar").value
+            fetch(`/filtrar_autor?buscar=${valor}`)
             .then(resultado => resultado.json())
             .then(livros => {
                 listarlivros(livros)

@@ -118,5 +118,30 @@ def listar_livros_nao_lidos():
         })
     return jsonify(resultado_nao_lidos)
 
+#################################
+### LISTA DE LIVROS NAO LIDOS ###
+#################################
+
+@app.route("/filtrar_autor", methods=["get"])
+def listar_livros_autor():
+    buscar = request.args["buscar"]
+    buscar = f"%{buscar}%"
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("select * from livros where autor ILIKE (%s)", (buscar,))
+    livros_autor = cur.fetchall()
+    cur.close()
+    conn.close()
+    resultado = []
+    for livro in livros_autor:
+        resultado.append({
+            "id": livro[0],
+            "titulo": livro[1],
+            "autor": livro[2],
+            "genero": livro[3]
+        })
+    return jsonify(resultado)
+
+
 if __name__=="__main__":
     app.run()

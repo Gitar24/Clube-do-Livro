@@ -1,27 +1,65 @@
 body {
-    background-color: rgb(43, 43, 43);
+    background-color: #1f1f1d;
 }
 *{
     text-decoration: none;
-    color: rgb(255, 255, 255);
+    color: rgb(197, 197, 197);
+    font-family: Arial, Helvetica, sans-serif;
 }
-button {
-    background-color: rgb(77, 77, 77);
-    border-color: rgb(134, 134, 134);
-    border-radius: 10%;
-}
+/*////////////////
+/// INDEX.HTML ///
+////////////////*/
 .navbar {
-    background-color: rgb(77, 77, 77);
+    background-color: #262624;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
     height: 50px;
 }
+.navbar button:first-of-type {
+    margin-left: auto;
+}
+.navbar button{
+    margin-left: 10px;
+    font-size: 16px;
+    padding: 10px;
+    width: max-content;
+    height: 40px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(96, 96, 96);
+    background-color: #262624;
+}
+.navbar input{
+    margin-left: 450px;
+    width: 400px;
+    background-color: rgb(77, 77, 77);
+    height: 35px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(96, 96, 96);
+    background-color: #30302e;
+    border-radius: 5px;
+}
 #filtro {
+    align-items: center;
     margin-top: 20px;
     margin-bottom: 20px;
     display: flex;
     gap: 8px;
+}
+#filtro button{
+    font-size: 16px;
+    padding: 10px;
+    padding: 10px;
+    width: max-content;
+    height: 40px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(96, 96, 96);
+    background-color: #1f1f1d;
 }
 #lista-livros {
     display: flex;
@@ -29,12 +67,57 @@ button {
     gap: 40px;
 }
 .card {
-    border-color: gainsboro;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(96, 96, 96);
     border-radius: 10px;
     min-width: 240px;
     min-height: 240px;
-    background-color: rgb(77, 77, 77);
+    background-color: #30302e;
 }
 .card p {
     margin: 5%;
+}
+/*//////////////////////////
+/// CADASTRAR_LIVRO.HTML ///
+//////////////////////////*/
+.formulario{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.formulario h1{
+    text-align: center;
+}
+.formulario input{
+    text-align: center;
+    width: 400px;
+    background-color: rgb(77, 77, 77);
+    height: 35px;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(96, 96, 96);
+    border-radius: 5px;
+
+    background-color: #1f1f1d;
+}
+.formulario label{
+    text-transform: uppercase;
+    display: flex;
+    padding-top: 20px;
+}
+.formulario button{
+    font-size: 16px;
+    padding: 10px;
+    padding: 10px;
+    height: 40px;
+
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(96, 96, 96);
+
+    background-color: #1f1f1d;
 }

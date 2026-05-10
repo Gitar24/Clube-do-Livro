@@ -9,16 +9,18 @@
 <body>
     <nav>
         <div  class="navbar">
-            <a href="/"><h1>Clube do Livro</h1></a>
+            <h1>Clube do Livro</h1>
+            <form action="/filtrar_autor">
+                <input type="text" name="buscar" id="input_buscar">
+                <button type="submit" id="buscar">buscar</button>
+            </form>
+            
             <button><a href="registrar_leitura">registrar leitura</a></button>
         </div>
     </nav>
-    <div id="tasdjasd">
-        <h1>cadastro de livro</h1>
-    </div>
-    
     <div class="formulario">
         <form action="/livro" method="post">
+            <h1>Cadastro de livro</h1>
 
             <label>titulo</label><br>
             <input type="text" name="titulo"><br>
