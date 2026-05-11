@@ -74,17 +74,20 @@ def registrar_leitura():
 def listar_livros():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select * from livros")
+    query = "SELECT l.id, l.titulo, l.autor, l.genero, r.id FROM livros l LEFT JOIN leituras r ON l.id = r.livro_id"
+    cur.execute(query)
     livros = cur.fetchall()
     cur.close()
     conn.close()
     resultado = []
     for livro in livros:
+        status_texto = "Lido" if livro[4] is not None else "Não Lido"
         resultado.append({
             "id": livro[0],
             "titulo": livro[1],
             "autor": livro[2],
-            "genero": livro[3]
+            "genero": livro[3],
+            "status": status_texto
         })
     return jsonify(resultado), 200
 
@@ -106,7 +109,8 @@ def listar_livros_lidos():
             "id": livro[0],
             "titulo": livro[1],
             "autor": livro[2],
-            "genero": livro[3]
+            "genero": livro[3],
+            "status": "Lido"
         })
     return jsonify(resultado_lidos), 200
 
@@ -128,7 +132,8 @@ def listar_livros_nao_lidos():
             "id": livro[0],
             "titulo": livro[1],
             "autor": livro[2],
-            "genero": livro[3]
+            "genero": livro[3],
+            "status": "Nao Lido"
         })
     return jsonify(resultado_nao_lidos), 200
 
