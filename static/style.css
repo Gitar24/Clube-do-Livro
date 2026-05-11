@@ -17,7 +17,6 @@ body {
     height: 50px;
 }
 .navbar button:first-of-type {
-    margin-left: auto;
 }
 .navbar button{
     margin-left: 10px;
@@ -32,7 +31,6 @@ body {
     background-color: #262624;
 }
 .navbar input{
-    margin-left: 450px;
     width: 400px;
     background-color: rgb(77, 77, 77);
     height: 35px;

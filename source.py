@@ -23,10 +23,6 @@ def cadastrar_livro():
     autor = dados.get("autor")
     genero = dados.get("genero")
     ano_publicacao = dados.get("ano_publicacao")
-
-    if not titulo or not autor or not genero or not ano_publicacao:
-        return jsonify({"erro": "todos os campos sao obrigatorios"}), 400
-
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into livros(titulo, autor, genero, ano_publicacao) values(%s, %s, %s, %s)", (titulo, autor, genero, ano_publicacao))
@@ -51,13 +47,6 @@ def registrar_leitura():
     comentario = dados.get("comentario")
     data_conclusao = dados.get("data_conclusao")
     livro_id = dados.get("livro_id")
-
-    if not nota or not livro_id:
-        return jsonify({"erro": "livro_id e nota sao obrigatórios"}), 400
- 
-    if int(nota) < 1 or int(nota) > 5:
-        return jsonify({"erro": "a nota deve ser entre 1 e 5"}), 400
-
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into leituras(nota, comentario, data_conclusao, livro_id) values(%s, %s, %s, %s)", (nota, comentario, data_conclusao, livro_id))
@@ -74,19 +63,20 @@ def registrar_leitura():
 def listar_livros():
     conn = get_connection()
     cur = conn.cursor()
-    query = "SELECT l.id, l.titulo, l.autor, l.genero, r.id FROM livros l LEFT JOIN leituras r ON l.id = r.livro_id"
+    query = "SELECT l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, r.id FROM livros l LEFT JOIN leituras r ON l.id = r.livro_id"
     cur.execute(query)
     livros = cur.fetchall()
     cur.close()
     conn.close()
     resultado = []
     for livro in livros:
-        status_texto = "Lido" if livro[4] is not None else "Não Lido"
+        status_texto = "Lido" if livro[5] is not None else "Nao Lido"
         resultado.append({
             "id": livro[0],
             "titulo": livro[1],
             "autor": livro[2],
             "genero": livro[3],
+            "ano_publicacao": livro[4],
             "status": status_texto
         })
     return jsonify(resultado), 200
@@ -110,6 +100,7 @@ def listar_livros_lidos():
             "titulo": livro[1],
             "autor": livro[2],
             "genero": livro[3],
+            "ano_publicacao": livro[4],
             "status": "Lido"
         })
     return jsonify(resultado_lidos), 200
@@ -133,6 +124,7 @@ def listar_livros_nao_lidos():
             "titulo": livro[1],
             "autor": livro[2],
             "genero": livro[3],
+            "ano_publicacao": livro[4],
             "status": "Nao Lido"
         })
     return jsonify(resultado_nao_lidos), 200
@@ -157,7 +149,9 @@ def buscar_livros():
             "id": livro[0],
             "titulo": livro[1],
             "autor": livro[2],
-            "genero": livro[3]
+            "genero": livro[3],
+            "ano_publicacao": livro[4],
+            "status": "Nao Lido"
         })
     return jsonify(resultado), 200
 
