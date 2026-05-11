@@ -10,12 +10,10 @@
     <nav>
         <div  class="navbar">
             <h1>Clube do Livro</h1>
-            <form action="/filtrar_autor">
-                <input type="text" name="buscar" id="input_buscar">
-                <button type="submit" id="buscar">buscar</button>
-            </form>
+            <input type="text" name="buscar" id="input_buscar">
+            <button type="submit" id="buscar">buscar</button>
             
-            <button><a href="cadastrar_livro">+cadastrar livro</a></button>
+            <button><a href="cadastrar_livro">cadastrar livro</a></button>
             <button><a href="registrar_leitura">registrar leitura</a></button>
         </div>
     </nav>
@@ -26,14 +24,6 @@
         <button id="nao-lidos">nao lidos</button>
     </div>
     <div id="lista-livros"></div>
-
-<!--
-###################
-### BOTAO TODOS ###
-###################
--->
-
-
     <script>
         function listarlivros(livros) {
             const div = document.getElementById("lista-livros")
@@ -43,6 +33,7 @@
                     <div class="card">
                         <p>${livro.titulo}</p>
                         <p>${livro.autor}</p>
+                        <p>${livro.genero}</p>
                     </div>`
             }
             div.innerHTML = html
@@ -107,7 +98,20 @@
                 listarlivros(livros)
             })
         }
-    </script>
 
+        //////////////////////////////////
+        /// BUSCAR O LIVRO PELO GENERO ///
+        //////////////////////////////////
+
+        document.getElementById("buscar").onclick = function(event){
+            event.preventDefault()
+            const valor = document.getElementById("input_buscar").value
+            fetch(`/filtrar_genero?buscar=${valor}`)
+            .then(resultado => resultado.json())
+            .then(livros => {
+                listarlivros(livros)
+            })
+        }
+    </script>
 </body>
 </html>

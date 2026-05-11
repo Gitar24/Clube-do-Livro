@@ -9,33 +9,49 @@
     <nav>
         <div  class="navbar">
             <h1>Clube do Livro</h1>
-            <form action="/filtrar_autor">
-                <input type="text" name="buscar" id="input_buscar">
-                <button type="submit" id="buscar">buscar</button>
-            </form>
-            
+            <input type="text"id="input_buscar">
+            <button type="submit" id="buscar">buscar</button>
             <button><a href="cadastrar_livro">+cadastrar livro</a></button>
         </div>
     </nav>
     <div class="formulario">
-        <form action="/registrar_leitura" method="post">
-            <h1>Registrar leituras</h1>
+        <h1>Registrar leituras</h1>
 
-            <label>livro_id</label><br>
-            <input type="text" name="livro_id"><br>
+        <label>livro_id</label><br>
+        <input type="text" id="livro_id"><br>
 
-            <label>nota</label><br>
-            <input type="number" name="nota"><br>
+        <label>nota</label><br>
+        <input type="number" id="nota"><br>
 
-            <label>comentario</label><br>
-            <input type="text" name="comentario"><br>
+        <label>comentario</label><br>
+        <input type="text" id="comentario"><br>
 
-            <label>data conclusao</label><br>
-            <input type="date" name="data_conclusao"><br><br>
+        <label>data conclusao</label><br>
+        <input type="date" id="data_conclusao"><br><br>
 
-            <button type="submit">Enviar</button>
-        </form>
+        <button id="button_registrar">Enviar</button>
     </div>
-    
+    <script>
+        document.getElementById("button_registrar").onclick = function() {
+            const dados = {
+                livro_id: document.getElementById("livro_id").value,
+                nota: document.getElementById("nota").value,
+                comentario: document.getElementById("comentario").value,
+                data_conclusao: document.getElementById("data_conclusao").value,}
+
+            fetch("/leituras", {
+                method: "POST",
+                headers: {"content-type": "application/json"},
+                body: JSON.stringify(dados)
+            })
+            .then(function(retorno){
+                return retorno.json()
+            })
+            .then(function(resultado){
+                console.log(resultado)
+                alert(resultado.mensagem || resultado.erro);
+            })
+        }
+    </script>
 </body>
 </html>

@@ -1,42 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <nav>
-        <div  class="navbar">
-            <h1>Clube do Livro</h1>
-            <form action="/filtrar_autor">
-                <input type="text" name="buscar" id="input_buscar">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+        <nav>
+            <div  class="navbar">
+                <h1>Clube do Livro</h1>
+                <input type="text" id="input_buscar">
                 <button type="submit" id="buscar">buscar</button>
-            </form>
-            
-            <button><a href="registrar_leitura">registrar leitura</a></button>
-        </div>
-    </nav>
-    <div class="formulario">
-        <form action="/livro" method="post">
+                <button><a href="registrar_leitura">registrar leitura</a></button>
+            </div>
+        </nav>
+        <div class="formulario">
             <h1>Cadastro de livro</h1>
 
             <label>titulo</label><br>
-            <input type="text" name="titulo"><br>
+            <input type="text" id="titulo"><br>
 
             <label>autor</label><br>
-            <input type="text" name="autor"><br>
+            <input type="text" id="autor"><br>
 
             <label>genero</label><br>
-            <input type="text" name="genero"><br>
+            <input type="text" id="genero"><br>
 
             <label>ano de publicacao</label><br>
-            <input type="date" name="ano_publicacao"><br><br>
+            <input type="date" id="ano_publicacao"><br><br>
 
-            <button type="submit">Enviar</button>
-        </form>
-    </div>
-    
-</body>
+            <button id="button_cadastrar">Enviar</button>
+            <p id="mensagem"></p>
+        </div>
+        <script>
+            document.getElementById("button_cadastrar").onclick = function() {
+                const dados = {
+                    titulo: document.getElementById("titulo").value,
+                    autor: document.getElementById("autor").value,
+                    genero: document.getElementById("genero").value,
+                    ano_publicacao: document.getElementById("ano_publicacao").value
+                }
+                fetch("/livro",{
+                    method: "POST",
+                    headers: {"content-type": "application/json"},
+                    body: JSON.stringify(dados)
+                })
+                .then(function(retorno){
+                    return retorno.json()
+                })
+                .then(function(resultado){
+                    console.log(resultado);
+                    alert(resultado.mensagem || resultado.erro);
+                })
+            }
+        </script>
+    </body>
 </html>

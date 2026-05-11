@@ -17,17 +17,23 @@ def pagina_cadastrar_livro():
 
 @app.route("/livro", methods=["post"])
 def cadastrar_livro():
-    titulo = request.form["titulo"]
-    autor = request.form["autor"]
-    genero = request.form["genero"]
-    ano_publicacao = request.form["ano_publicacao"]
+    dados = request.get_json()
+
+    titulo = dados.get("titulo")
+    autor = dados.get("autor")
+    genero = dados.get("genero")
+    ano_publicacao = dados.get("ano_publicacao")
+
+    if not titulo or not autor or not genero or not ano_publicacao:
+        return jsonify({"erro": "todos os campos sao obrigatorios"}), 400
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into livros(titulo, autor, genero, ano_publicacao) values(%s, %s, %s, %s)", (titulo, autor, genero, ano_publicacao))
     conn.commit()
     cur.close()
     conn.close()
-    return render_template("cadastrar_livro.html")
+    return jsonify({"mensagem": "Livro cadastrado com sucesso!"}), 201
 
 ############################
 ### REGISTRO DE LEITURAS ###
@@ -39,18 +45,26 @@ def pagina_registrar_leitura():
 
 @app.route("/leituras", methods=["post"])
 def registrar_leitura():
-    print(request.form)
-    nota = request.form["nota"]
-    comentario = request.form["comentario"]
-    data_conclusao = request.form["data_conclusao"]
-    livro_id = request.form["livro_id"]
+    dados = request.get_json()
+
+    nota = dados.get("nota")
+    comentario = dados.get("comentario")
+    data_conclusao = dados.get("data_conclusao")
+    livro_id = dados.get("livro_id")
+
+    if not nota or not livro_id:
+        return jsonify({"erro": "livro_id e nota sao obrigatórios"}), 400
+ 
+    if int(nota) < 1 or int(nota) > 5:
+        return jsonify({"erro": "a nota deve ser entre 1 e 5"}), 400
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into leituras(nota, comentario, data_conclusao, livro_id) values(%s, %s, %s, %s)", (nota, comentario, data_conclusao, livro_id))
     conn.commit()
     cur.close()
     conn.close()
-    return render_template("registrar_leitura.html")
+    return jsonify({"mensagem": "Leitura registrada com sucesso!"}), 201
 
 #######################
 ### LISTA DE LIVROS ###
@@ -72,7 +86,7 @@ def listar_livros():
             "autor": livro[2],
             "genero": livro[3]
         })
-    return jsonify(resultado)
+    return jsonify(resultado), 200
 
 #############################
 ### LISTA DE LIVROS LIDOS ###
@@ -94,7 +108,7 @@ def listar_livros_lidos():
             "autor": livro[2],
             "genero": livro[3]
         })
-    return jsonify(resultado_lidos)
+    return jsonify(resultado_lidos), 200
 
 #################################
 ### LISTA DE LIVROS NAO LIDOS ###
@@ -116,11 +130,11 @@ def listar_livros_nao_lidos():
             "autor": livro[2],
             "genero": livro[3]
         })
-    return jsonify(resultado_nao_lidos)
+    return jsonify(resultado_nao_lidos), 200
 
-#################################
-### LISTA DE LIVROS NAO LIDOS ###
-#################################
+#########################
+### FILTRAR POR AUTOR ###
+#########################
 
 @app.route("/filtrar_autor", methods=["get"])
 def listar_livros_autor():
@@ -140,8 +154,31 @@ def listar_livros_autor():
             "autor": livro[2],
             "genero": livro[3]
         })
-    return jsonify(resultado)
+    return jsonify(resultado), 200
 
+##########################
+### FILTRAR POR GENERO ###
+##########################
+
+@app.route("/filtrar_genero", methods=["get"])
+def listar_livros_genero():
+    buscar = request.args["buscar"]
+    buscar = f"%{buscar}%"
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("select * from livros where genero ILIKE (%s)", (buscar,))
+    livro_genero = cur.fetchall()
+    cur.close()
+    conn.close()
+    resultado = []
+    for livro in livro_genero:
+        resultado.append({
+            "id": livro[0],
+            "titulo": livro[1],
+            "autor": livro[2],
+            "genero": livro[3]
+        })
+    return jsonify(resultado), 200
 
 if __name__=="__main__":
     app.run()
