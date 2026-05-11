@@ -31,6 +31,7 @@
             for (const livro of livros){
                 html += `
                     <div class="card">
+                        <p>${livro.id}</p>
                         <p>${livro.titulo}</p>
                         <p>${livro.autor}</p>
                         <p>${livro.genero}</p>
@@ -85,28 +86,14 @@
             })
         }
         
-        /////////////////////////////////
-        /// BUSCAR O LIVRO PELO AUTOR ///
-        /////////////////////////////////
+        //////////////////////////////////////////
+        /// BUSCAR O LIVRO PELO AUTOR E GENERO ///
+        //////////////////////////////////////////
 
         document.getElementById("buscar").onclick = function(event){
             event.preventDefault()
             const valor = document.getElementById("input_buscar").value
-            fetch(`/filtrar_autor?buscar=${valor}`)
-            .then(resultado => resultado.json())
-            .then(livros => {
-                listarlivros(livros)
-            })
-        }
-
-        //////////////////////////////////
-        /// BUSCAR O LIVRO PELO GENERO ///
-        //////////////////////////////////
-
-        document.getElementById("buscar").onclick = function(event){
-            event.preventDefault()
-            const valor = document.getElementById("input_buscar").value
-            fetch(`/filtrar_genero?buscar=${valor}`)
+            fetch(`/buscar?buscar=${valor}`)
             .then(resultado => resultado.json())
             .then(livros => {
                 listarlivros(livros)

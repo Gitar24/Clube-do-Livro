@@ -132,46 +132,22 @@ def listar_livros_nao_lidos():
         })
     return jsonify(resultado_nao_lidos), 200
 
-#########################
-### FILTRAR POR AUTOR ###
-#########################
+##################################
+### FILTRAR POR AUTOR E GENERO ###
+##################################
 
-@app.route("/filtrar_autor", methods=["get"])
-def listar_livros_autor():
+@app.route("/buscar", methods=["get"])
+def buscar_livros():
     buscar = request.args["buscar"]
-    buscar = f"%{buscar}%"
+    buscar_formatado = f"%{buscar}%"
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select * from livros where autor ILIKE (%s)", (buscar,))
-    livros_autor = cur.fetchall()
+    cur.execute("select * from livros where autor ILIKE (%s) or genero ILIKE (%s)", (buscar_formatado, buscar_formatado))
+    livros_filtrados = cur.fetchall()
     cur.close()
     conn.close()
     resultado = []
-    for livro in livros_autor:
-        resultado.append({
-            "id": livro[0],
-            "titulo": livro[1],
-            "autor": livro[2],
-            "genero": livro[3]
-        })
-    return jsonify(resultado), 200
-
-##########################
-### FILTRAR POR GENERO ###
-##########################
-
-@app.route("/filtrar_genero", methods=["get"])
-def listar_livros_genero():
-    buscar = request.args["buscar"]
-    buscar = f"%{buscar}%"
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("select * from livros where genero ILIKE (%s)", (buscar,))
-    livro_genero = cur.fetchall()
-    cur.close()
-    conn.close()
-    resultado = []
-    for livro in livro_genero:
+    for livro in livros_filtrados:
         resultado.append({
             "id": livro[0],
             "titulo": livro[1],
