@@ -36,9 +36,31 @@ def cadastrar_livro():
     return jsonify({"mensagem": "Livro cadastrado com sucesso!"}), 201
 
 ############################
-### REGISTRO dos.get("comentario")
+### REGISTRO DE LEITURAS ###
+############################
+
+@app.route("/registrar_leitura")
+def pagina_registrar_leitura():
+    return render_template("registrar_leitura.html")
+
+@app.route("/leituras", methods=["post"])
+def registrar_leitura():
+    dados = request.get_json()
+
+    nota = dados.get("nota")
+    comentario = dados.get("comentario")
     data_conclusao = dados.get("data_conclusao")
     livro_id = dados.get("livro_id")
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    query = "select id from livros where id = %s"
+    cur.execute(query, (livro_id,))
+    livro_existe = cur.fetchall()
+    
+    if not livro_existe:
+        return jsonify({"erro": "ID do Livro nao encontrado"})
 
     if not livro_id or not nota:
         return jsonify({"erro": "livro_id e nota sao obrigatorios"}), 400
@@ -50,25 +72,13 @@ def cadastrar_livro():
         
     if data_conclusao == "":
         data_conclusao = None
-
-    conDE LEITURAS ###
-############################
-
-@app.route("/registrar_leitura")
-def pagina_registrar_leitura():
-    return render_template("registrar_leitura.html")
-
-@app.route("/leituras", methods=["post"])
-def registrar_leitura():
-    dados = request.get_json()
-    nota = dados.get("nota")
-    comentario = dan = get_connection()
-    cur = conn.cursor()
+        
     cur.execute("insert into leituras(nota, comentario, data_conclusao, livro_id) values(%s, %s, %s, %s)", (nota, comentario, data_conclusao, livro_id))
     conn.commit()
     cur.close()
     conn.close()
     return jsonify({"mensagem": "Leitura registrada com sucesso!"}), 201
+
 
 #######################
 ### LISTA DE LIVROS ###
@@ -78,7 +88,7 @@ def registrar_leitura():
 def listar_livros():
     conn = get_connection()
     cur = conn.cursor()
-    query = "select l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, le.id from livros l left join leituras le on l.id = le.livro_id"
+    query = "select l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, le.id from livros l left join leituras le on l.id = le.livro_id order by l.id"
     cur.execute(query)
     livros = cur.fetchall()
     cur.close()
@@ -104,7 +114,7 @@ def listar_livros():
 def listar_livros_lidos():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select * from livros l inner join leituras le on l.id = le.livro_id")
+    cur.execute("select * from livros l inner join leituras le on l.id = le.livro_id order by l.id")
     livros_lidos = cur.fetchall()
     cur.close()
     conn.close()
@@ -128,7 +138,7 @@ def listar_livros_lidos():
 def listar_livros_nao_lidos():
     conn = get_connection()
     cur = conn.cursor()
-    query = "select * from livros l left join leituras le on l.id = le.livro_id where le.livro_id is null"
+    query = "select * from livros l left join leituras le on l.id = le.livro_id where le.livro_id is null order by l.id"
     cur.execute(query)
     livros_nao_lidos = cur.fetchall()
     cur.close()
@@ -155,7 +165,7 @@ def buscar_livros():
     buscar_formatado = f"%{buscar}%"
     conn = get_connection()
     cur = conn.cursor()
-    query = "select l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, le.id from livros l left join leituras le on l.id = le.livro_id"
+    query = "select l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, le.id from livros l left join leituras le on l.id = le.livro_id where l.autor ilike %s or l.genero ilike %s order by l.id"
     cur.execute(query, (buscar_formatado, buscar_formatado))
     livros_filtrados = cur.fetchall()
     cur.close()

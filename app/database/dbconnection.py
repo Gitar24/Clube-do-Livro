@@ -12,3 +12,4 @@ def get_connection():
         password=os.environ["password"]
     )
     return conn
+    
