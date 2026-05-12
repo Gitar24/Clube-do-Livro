@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import psycopg2
-from dbconnection import get_connection
+from database.dbconnection import get_connection
 
 app = Flask(__name__)
 @app.route("/")
@@ -36,18 +36,7 @@ def cadastrar_livro():
     return jsonify({"mensagem": "Livro cadastrado com sucesso!"}), 201
 
 ############################
-### REGISTRO DE LEITURAS ###
-############################
-
-@app.route("/registrar_leitura")
-def pagina_registrar_leitura():
-    return render_template("registrar_leitura.html")
-
-@app.route("/leituras", methods=["post"])
-def registrar_leitura():
-    dados = request.get_json()
-    nota = dados.get("nota")
-    comentario = dados.get("comentario")
+### REGISTRO dos.get("comentario")
     data_conclusao = dados.get("data_conclusao")
     livro_id = dados.get("livro_id")
 
@@ -62,7 +51,18 @@ def registrar_leitura():
     if data_conclusao == "":
         data_conclusao = None
 
-    conn = get_connection()
+    conDE LEITURAS ###
+############################
+
+@app.route("/registrar_leitura")
+def pagina_registrar_leitura():
+    return render_template("registrar_leitura.html")
+
+@app.route("/leituras", methods=["post"])
+def registrar_leitura():
+    dados = request.get_json()
+    nota = dados.get("nota")
+    comentario = dan = get_connection()
     cur = conn.cursor()
     cur.execute("insert into leituras(nota, comentario, data_conclusao, livro_id) values(%s, %s, %s, %s)", (nota, comentario, data_conclusao, livro_id))
     conn.commit()
@@ -155,7 +155,8 @@ def buscar_livros():
     buscar_formatado = f"%{buscar}%"
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select * from livros where autor ILIKE (%s) or genero ILIKE (%s)", (buscar_formatado, buscar_formatado))
+    query = "select l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, le.id from livros l left join leituras le on l.id = le.livro_id"
+    cur.execute(query, (buscar_formatado, buscar_formatado))
     livros_filtrados = cur.fetchall()
     cur.close()
     conn.close()
@@ -180,7 +181,7 @@ def buscar_livros():
 def recomendar_livros():
     conn = get_connection()
     cur = conn.cursor()
-    query = "select * from livros where genero in (select l.genero from livros as l join leituras as r on l.id = r.livro_id group by l.genero order by avg(r.nota) desc limit 1) and id not in (select livro_id from leituras)"
+    query = "select * from livros where (genero, autor) in (select l.genero, l.autor  from livros l join leituras r on l.id = r.livro_id group by l.genero, l.autor  order by avg(r.nota) desc limit 1) and id not in (select livro_id from leituras)"
     cur.execute(query)
     livros_recomendados = cur.fetchall()
     cur.close()

@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/static/style.css">
-<body>
-    <nav>
-        <div  class="navbar">
-            <img src="https://images.freeimages.com/image/previews/4be/orange-book-icon-png-5694165.png?w=500" height="40px"><h1>Clube do Livro</h1>
-            <button><a href="/">Pagina Inicial</a></button>
-            <button><a href="cadastrar_livro">Cadastrar Livro</a></button>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+        <nav>
+            <div  class="navbar">
+                <img src="https://images.freeimages.com/image/previews/4be/orange-book-icon-png-5694165.png?w=500" height="40px"><h1>Clube do Livro</h1>
+                <button><a href="/">Pagina Inicial</a></button>
+                <button><a href="cadastrar_livro">Cadastrar Livro</a></button>
+            </div>
+        </nav>
+        <div class="box">
+            <div class="formulario">
+                <h1>Registrar leituras</h1>
+
+                <strong><label>ID do Livro</label></strong>
+                <input type="text" id="livro_id">
+
+                <strong><label>Nota</label></strong>
+                <input type="number" id="nota">
+
+                <strong><label>Comentario</label></strong>
+                <input type="text" id="comentario">
+
+                <strong><label>Data de conclusao</label></strong>
+                <input type="date" id="data_conclusao">
+
+                <button id="button_registrar">Enviar</button>
+            </div>
         </div>
-    </nav>
-    <div class="box">
-        <div class="formulario">
-            <h1>Registrar leituras</h1>
+        <script>
+            document.getElementById("button_registrar").onclick = function() {
+                const dados = {
+                    livro_id: document.getElementById("livro_id").value,
+                    nota: document.getElementById("nota").value,
+                    comentario: document.getElementById("comentario").value,
+                    data_conclusao: document.getElementById("data_conclusao").value,}
 
-            <strong><label>ID do Livro</label></strong>
-            <input type="text" id="livro_id">
-
-            <strong><label>Nota</label></strong>
-            <input type="number" id="nota">
-
-            <strong><label>Comentario</label></strong>
-            <input type="text" id="comentario">
-
-            <strong><label>Data de conclusao</label></strong>
-            <input type="date" id="data_conclusao">
-
-            <button id="button_registrar">Enviar</button>
-        </div>
-    </div>
-    <script>
-        document.getElementById("button_registrar").onclick = function() {
-            const dados = {
-                livro_id: document.getElementById("livro_id").value,
-                nota: document.getElementById("nota").value,
-                comentario: document.getElementById("comentario").value,
-                data_conclusao: document.getElementById("data_conclusao").value,}
-
-            fetch("/leituras", {
-                method: "POST",
-                headers: {"content-type": "application/json"},
-                body: JSON.stringify(dados)
-            })
-            .then(function(retorno){
-                return retorno.json()
-            })
-            .then(function(resultado){
-                console.log(resultado)
-                alert(resultado.mensagem || resultado.erro);
-                if (resultado.mensagem){
-                        document.getElementById("livro_id").value = "";
-                        document.getElementById("nota").value = "";
-                        document.getElementById("comentario").value = "";
-                        document.getElementById("data_conclusao").value = "";
-                    }
-            })
-        }
-    </script>
-</body>
+                fetch("/leituras", {
+                    method: "POST",
+                    headers: {"content-type": "application/json"},
+                    body: JSON.stringify(dados)
+                })
+                .then(function(retorno){
+                    return retorno.json()
+                })
+                .then(function(resultado){
+                    console.log(resultado)
+                    alert(resultado.mensagem || resultado.erro);
+                    if (resultado.mensagem){
+                            document.getElementById("livro_id").value = "";
+                            document.getElementById("nota").value = "";
+                            document.getElementById("comentario").value = "";
+                            document.getElementById("data_conclusao").value = "";
+                        }
+                })
+            }
+        </script>
+    </body>
 </html>

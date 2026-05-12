@@ -68,7 +68,7 @@ body {
 #lista-livros {
     display: flex;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: 70px;
 }
 .card {
     border-style: solid;
