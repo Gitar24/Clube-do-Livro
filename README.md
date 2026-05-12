@@ -1,4 +1,4 @@
-# Clube do Livro
+# 📖 Clube do Livro
 
 Projeto de gerenciamento de leituras feito com Flask e PostgreSQL.
 
