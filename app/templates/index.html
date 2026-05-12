@@ -9,21 +9,24 @@
 <body>
     <nav>
         <div  class="navbar">
-            <h1>Clube do Livro</h1>
-            <input type="text" name="buscar" id="input_buscar">
-            <button type="submit" id="buscar">buscar</button>
-            
-            <button><a href="cadastrar_livro">cadastrar livro</a></button>
-            <button><a href="registrar_leitura">registrar leitura</a></button>
+            <img src="https://images.freeimages.com/image/previews/4be/orange-book-icon-png-5694165.png?w=500" height="40px"><h1>Clube do Livro</h1>
+            <input type="text" placeholder="buscar por autor ou genero" name="buscar" id="input_buscar">
+            <button type="submit" id="buscar">Buscar</button>
+
+            <button><a href="cadastrar_livro">Cadastrar livro</a></button>
+            <button><a href="registrar_leitura">Registrar Leitura</a></button>
         </div>
     </nav>
     <div id="filtro">
-        <p>filtrar:</p>
+        <h3>Filtrar :</h3>
         <button id="todos">todos</button>
         <button id="lidos">lidos</button>
         <button id="nao-lidos">nao lidos</button>
     </div>
+    <h2>Livros</h2>
     <div id="lista-livros"></div>
+    <h2>Recomendações</h2>
+    <div id="lista-livros-recomendados"></div>
     <script>
         function listarlivros(livros) {
             const div = document.getElementById("lista-livros")
@@ -31,12 +34,15 @@
             for (const livro of livros){
                 html += `
                     <div class="card">
+                        <div class="card-imagem">
+                        
+                        </div>
                         <p>${livro.id}</p>
-                        <p>${livro.titulo}</p>
-                        <p>${livro.autor}</p>
-                        <p>${livro.genero}</p>
-                        <p>${livro.ano_publicacao}</p>
-                        <p>${livro.status}</p>
+                        <h3>${livro.titulo}</h3>
+                        <h4>${livro.autor}</h4>
+                        <span class="genero-lista">${livro.genero}</span>
+                        <span class="ano">${livro.ano_publicacao}</span>
+                        <span class="status">${livro.status}</span>
                     </div>`
             }
             div.innerHTML = html
@@ -101,6 +107,45 @@
                 listarlivros(livros)
             })
         }
+    </script>
+
+
+<!--/////////////////////
+    /// RECOMEDACOES ///
+    ////////////////////-->
+
+
+    <script>
+        function listarlivrosrecomendados(recomendacoes) {
+            const div = document.getElementById("lista-livros-recomendados")
+            html = ""
+            for (const livro of recomendacoes){
+                html += `
+                    <div class="card">
+                        <div class="card-imagem">
+                        
+                        </div>
+                        <p>${livro.id}</p>
+                        <h3>${livro.titulo}</h3>
+                        <h4>${livro.autor}</h4>
+                        <span class="genero-lista">${livro.genero}</span>
+                        <span class="ano">${livro.ano_publicacao}</span>
+                        <span class="status">${livro.status}</span>
+                    </div>`
+            }
+            div.innerHTML = html
+        }
+
+        ////////////////////////////////////////////////
+        /// MOSTRAR A LISTA DE TODAS AS RECOMEDACOES ///
+        ////////////////////////////////////////////////
+
+        fetch("/recomendacoes")
+            .then(resultado => resultado.json())
+            .then(recomendacoes => {
+                listarlivrosrecomendados(recomendacoes)
+            })
+
     </script>
 </body>
 </html>

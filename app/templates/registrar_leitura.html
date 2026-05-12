@@ -8,28 +8,29 @@
 <body>
     <nav>
         <div  class="navbar">
-            <h1>Clube do Livro</h1>
-            <input type="text"id="input_buscar">
-            <button type="submit" id="buscar">buscar</button>
-            <button><a href="cadastrar_livro">+cadastrar livro</a></button>
+            <img src="https://images.freeimages.com/image/previews/4be/orange-book-icon-png-5694165.png?w=500" height="40px"><h1>Clube do Livro</h1>
+            <button><a href="/">Pagina Inicial</a></button>
+            <button><a href="cadastrar_livro">Cadastrar Livro</a></button>
         </div>
     </nav>
-    <div class="formulario">
-        <h1>Registrar leituras</h1>
+    <div class="box">
+        <div class="formulario">
+            <h1>Registrar leituras</h1>
 
-        <label>livro_id</label><br>
-        <input type="text" id="livro_id"><br>
+            <strong><label>ID do Livro</label></strong>
+            <input type="text" id="livro_id">
 
-        <label>nota</label><br>
-        <input type="number" id="nota"><br>
+            <strong><label>Nota</label></strong>
+            <input type="number" id="nota">
 
-        <label>comentario</label><br>
-        <input type="text" id="comentario"><br>
+            <strong><label>Comentario</label></strong>
+            <input type="text" id="comentario">
 
-        <label>data conclusao</label><br>
-        <input type="date" id="data_conclusao"><br><br>
+            <strong><label>Data de conclusao</label></strong>
+            <input type="date" id="data_conclusao">
 
-        <button id="button_registrar">Enviar</button>
+            <button id="button_registrar">Enviar</button>
+        </div>
     </div>
     <script>
         document.getElementById("button_registrar").onclick = function() {

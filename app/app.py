@@ -23,6 +23,10 @@ def cadastrar_livro():
     autor = dados.get("autor")
     genero = dados.get("genero")
     ano_publicacao = dados.get("ano_publicacao")
+
+    if not titulo or not autor or not genero or not ano_publicacao:
+        return jsonify({"erro": "todos os campos sao obrigatorio"}), 400
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into livros(titulo, autor, genero, ano_publicacao) values(%s, %s, %s, %s)", (titulo, autor, genero, ano_publicacao))
@@ -42,11 +46,22 @@ def pagina_registrar_leitura():
 @app.route("/leituras", methods=["post"])
 def registrar_leitura():
     dados = request.get_json()
-
     nota = dados.get("nota")
     comentario = dados.get("comentario")
     data_conclusao = dados.get("data_conclusao")
     livro_id = dados.get("livro_id")
+
+    if not livro_id or not nota:
+        return jsonify({"erro": "livro_id e nota sao obrigatorios"}), 400
+    if int(nota) <1 or int(nota) >5:
+        return jsonify({"erro": "nota deve ser entre 1 e 5"}), 400
+
+    if comentario == "":
+        comentario = None
+        
+    if data_conclusao == "":
+        data_conclusao = None
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("insert into leituras(nota, comentario, data_conclusao, livro_id) values(%s, %s, %s, %s)", (nota, comentario, data_conclusao, livro_id))
@@ -63,14 +78,14 @@ def registrar_leitura():
 def listar_livros():
     conn = get_connection()
     cur = conn.cursor()
-    query = "SELECT l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, r.id FROM livros l LEFT JOIN leituras r ON l.id = r.livro_id"
+    query = "select l.id, l.titulo, l.autor, l.genero, l.ano_publicacao, le.id from livros l left join leituras le on l.id = le.livro_id"
     cur.execute(query)
     livros = cur.fetchall()
     cur.close()
     conn.close()
     resultado = []
     for livro in livros:
-        status_texto = "Lido" if livro[5] is not None else "Nao Lido"
+        status_texto = "Nao Lido" if livro[5] is None else "Lido"
         resultado.append({
             "id": livro[0],
             "titulo": livro[1],
@@ -89,7 +104,7 @@ def listar_livros():
 def listar_livros_lidos():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select * from livros as a inner join leituras as b on a.id = b.livro_id")
+    cur.execute("select * from livros l inner join leituras le on l.id = le.livro_id")
     livros_lidos = cur.fetchall()
     cur.close()
     conn.close()
@@ -113,7 +128,8 @@ def listar_livros_lidos():
 def listar_livros_nao_lidos():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("select * from livros as a left join leituras as b on a.id = b.livro_id where b.livro_id is null")
+    query = "select * from livros l left join leituras le on l.id = le.livro_id where le.livro_id is null"
+    cur.execute(query)
     livros_nao_lidos = cur.fetchall()
     cur.close()
     conn.close()
@@ -130,7 +146,7 @@ def listar_livros_nao_lidos():
     return jsonify(resultado_nao_lidos), 200
 
 ##################################
-### FILTRAR POR AUTOR E GENERO ###
+### BUSCAR POR AUTOR E GENERO ###
 ##################################
 
 @app.route("/buscar", methods=["get"])
@@ -145,13 +161,39 @@ def buscar_livros():
     conn.close()
     resultado = []
     for livro in livros_filtrados:
+        status_texto = "Lido" if livro[5] is not None else "Nao Lido"
         resultado.append({
             "id": livro[0],
             "titulo": livro[1],
             "autor": livro[2],
             "genero": livro[3],
             "ano_publicacao": livro[4],
-            "status": "Nao Lido"
+            "status": status_texto
+        })
+    return jsonify(resultado), 200
+
+#####################
+### RECOMENDACOES ###
+#####################
+
+@app.route("/recomendacoes")
+def recomendar_livros():
+    conn = get_connection()
+    cur = conn.cursor()
+    query = "select * from livros where genero in (select l.genero from livros as l join leituras as r on l.id = r.livro_id group by l.genero order by avg(r.nota) desc limit 1) and id not in (select livro_id from leituras)"
+    cur.execute(query)
+    livros_recomendados = cur.fetchall()
+    cur.close()
+    conn.close()
+    resultado = []
+    for livro in livros_recomendados:
+        resultado.append({
+            "id": livro[0],
+            "titulo": livro[1],
+            "autor": livro[2],
+            "genero": livro[3],
+            "ano_publicacao": livro[4],
+            "status": "Recomendado"
         })
     return jsonify(resultado), 200
 

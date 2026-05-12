@@ -8,7 +8,7 @@ create table livros (
 
 create table leituras (
     id serial primary key,
-    nota int check (nota >=1 and nota <=5) not null,
+    nota int check (nota >= 1 and nota <= 5) not null,
     comentario text,
     data_conclusao date,
     livro_id integer references livros(id)

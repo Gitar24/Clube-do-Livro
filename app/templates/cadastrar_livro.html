@@ -9,30 +9,31 @@
     <body>
         <nav>
             <div  class="navbar">
-                <h1>Clube do Livro</h1>
-                <input type="text" id="input_buscar">
-                <button type="submit" id="buscar">buscar</button>
-                <button><a href="registrar_leitura">registrar leitura</a></button>
+                <img src="https://images.freeimages.com/image/previews/4be/orange-book-icon-png-5694165.png?w=500" height="40px"><h1>Clube do Livro</h1>
+                <button><a href="/">Pagina Inicial</a></button>
+                <button><a href="registrar_leitura">Registrar Leitura</a></button>
             </div>
         </nav>
-        <div class="formulario">
-            <h1>Cadastro de livro</h1>
+        <div class="box">
+            <div class="formulario">
+                <h1>Cadastro de livro</h1>
 
-            <label>titulo</label><br>
-            <input type="text" id="titulo"><br>
+                <strong><label>Titulo</label></strong>
+                <input type="text" id="titulo">
 
-            <label>autor</label><br>
-            <input type="text" id="autor"><br>
+                <strong><label>Autor</label></strong>
+                <input type="text" id="autor">
 
-            <label>genero</label><br>
-            <input type="text" id="genero"><br>
+                <strong><label>Genero</label></strong>
+                <input type="text" id="genero">
 
-            <label>ano de publicacao</label><br>
-            <input type="date" id="ano_publicacao" min="1000" max="2026"><br><br>
+                <strong><label>Ano de Publicacao</label></strong>
+                <input type="number" id="ano_publicacao" min="1000" max="2026">
 
-            <button id="button_cadastrar">Enviar</button>
-            <p id="mensagem"></p>
+                <button id="button_cadastrar">Enviar</button>
+            </div>
         </div>
+        
         <script>
             document.getElementById("button_cadastrar").onclick = function() {
                 const dados = {
