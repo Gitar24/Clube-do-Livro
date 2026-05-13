@@ -33,33 +33,6 @@
                 <button id="button_registrar">Enviar</button>
             </div>
         </div>
-        <script>
-            document.getElementById("button_registrar").onclick = function() {
-                const dados = {
-                    livro_id: document.getElementById("livro_id").value,
-                    nota: document.getElementById("nota").value,
-                    comentario: document.getElementById("comentario").value,
-                    data_conclusao: document.getElementById("data_conclusao").value,}
-
-                fetch("/leituras", {
-                    method: "POST",
-                    headers: {"content-type": "application/json"},
-                    body: JSON.stringify(dados)
-                })
-                .then(function(retorno){
-                    return retorno.json()
-                })
-                .then(function(resultado){
-                    console.log(resultado)
-                    alert(resultado.mensagem || resultado.erro);
-                    if (resultado.mensagem){
-                            document.getElementById("livro_id").value = "";
-                            document.getElementById("nota").value = "";
-                            document.getElementById("comentario").value = "";
-                            document.getElementById("data_conclusao").value = "";
-                        }
-                })
-            }
-        </script>
+        <script src="/static/script.js"></script>
     </body>
 </html>

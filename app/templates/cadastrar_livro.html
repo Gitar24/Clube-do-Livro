@@ -34,33 +34,6 @@
             </div>
         </div>
         
-        <script>
-            document.getElementById("button_cadastrar").onclick = function() {
-                const dados = {
-                    titulo: document.getElementById("titulo").value,
-                    autor: document.getElementById("autor").value,
-                    genero: document.getElementById("genero").value,
-                    ano_publicacao: document.getElementById("ano_publicacao").value
-                }
-                fetch("/livro",{
-                    method: "POST",
-                    headers: {"content-type": "application/json"},
-                    body: JSON.stringify(dados)
-                })
-                .then(function(retorno){
-                    return retorno.json()
-                })
-                .then(function(resultado){
-                    console.log(resultado);
-                    alert(resultado.mensagem || resultado.erro);
-                    if (resultado.mensagem){
-                        document.getElementById("titulo").value = "";
-                        document.getElementById("autor").value = "";
-                        document.getElementById("genero").value = "";
-                        document.getElementById("ano_publicacao").value = "";
-                    }
-                })
-            }
-        </script>
+        <script src="/static/script.js"></script>
     </body>
 </html>
